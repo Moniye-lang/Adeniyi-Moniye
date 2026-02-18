@@ -9,29 +9,39 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Combine scroll listeners for better performance
   useEffect(() => {
-    const handleScroll = () => {
-      // 1. Handle background change
-      setScrolled(window.scrollY > 20);
+  // 1. Setup the Observer options
+  const options = {
+    root: null, // use the viewport
+    rootMargin: "-20% 0px -70% 0px", // triggers when section is in the upper-middle of screen
+    threshold: 0,
+  };
 
-      // 2. Handle Scroll Spy (Active Section)
-      const sections = ['home', 'projects', 'about','experience', 'contact'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          // Adjust 200 to change when the highlight triggers
-          if (rect.top >= -100 && rect.top < 300) {
-            setActiveSection(`#${section}`);
-          }
-        }
+  // 2. The Callback: only fires when a section crosses the tripwire
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setActiveSection(`#${entry.target.id}`);
       }
-    };
+    });
+  }, options);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // 3. Start observing the sections
+  const sections = ['home', 'projects', 'about', 'experience', 'contact'];
+  sections.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // 4. Handle the "Scrolled" state separately (less expensive)
+  const handleScroll = () => setScrolled(window.scrollY > 20);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+
+  return () => {
+    observer.disconnect();
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
   const navLinks = [
     { name: 'Home', href: '#home' },
@@ -41,77 +51,87 @@ export default function Navbar() {
     { name: 'Contact Me', href: '#contact' },
   ];
 
-  // Logic for the underline effect
-  const baseLink = "relative font-medium transition-all duration-300 py-1";
-  
+  const baseLink = "relative font-bold text-sm uppercase tracking-widest transition-all duration-300 py-1";
   const activeStyle = `${baseLink} text-slate-900 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-teal-500`;
-
   const defaultStyle = `${baseLink} text-gray-400 hover:text-slate-900 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-teal-500 after:transition-all after:duration-300 hover:after:w-full`;
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-12 ${
-      scrolled ? "bg-white/80 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"
-    }`}>
-      
-      {/* Logo Placeholder */}
-      <div className="text-2xl font-black tracking-tighter text-slate-900">
-        MONIYE<span className="text-teal-500">.</span>
-      </div>
-
-      {/* Desktop Navigation */}
-      <div className="hidden lg:flex gap-x-10">
-        {navLinks.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={() => setActiveSection(link.href)}
-            className={activeSection === link.href ? activeStyle : defaultStyle}
-          >
-            {link.name}
-          </a>
-        ))}
-      </div>
-
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={toggleMenu} 
-        className="lg:hidden p-2 text-slate-900 focus:outline-none"
-      >
-        {isOpen ? <X size={28} /> : <Menu size={28} />}
-      </button>
-
-      {/* Sidebar Overlay */}
-      <div className={`fixed inset-0 z-[60] flex justify-end transition-all duration-500 ${
-        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+    <>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 flex items-center justify-between px-6 md:px-12 ${
+        scrolled ? "bg-white/90 backdrop-blur-xl shadow-sm py-4" : "bg-transparent py-8"
       }`}>
-        <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm" onClick={toggleMenu} />
 
-        <div className={`relative w-72 h-full bg-white p-8 shadow-2xl transition-transform duration-500 ease-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}>
-          <div className="flex justify-end mb-8">
-            <button onClick={toggleMenu} className="p-2 bg-slate-50 rounded-full"><X size={24}/></button>
-          </div>
-          
-          <nav className="flex flex-col gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => {
-                  setActiveSection(link.href);
-                  setIsOpen(false);
-                }}
-                className={`text-2xl font-bold transition-all ${
-                  activeSection === link.href ? "text-teal-500 translate-x-2" : "text-slate-400 hover:text-slate-900"
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
-          </nav>
+        {/* Logo */}
+        <div className="text-2xl font-black tracking-tighter text-slate-900 z-[70]">
+          MONIYE<span className="text-teal-500">.</span>
         </div>
-      </div>
-    </nav>
+
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex gap-x-10">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setActiveSection(link.href)}
+              className={activeSection === link.href ? activeStyle : defaultStyle}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          onClick={toggleMenu}
+          className="lg:hidden p-2 text-slate-900 z-[70] hover:bg-slate-100 rounded-xl transition-colors"
+        >
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+      </nav>
+
+      {/* FULLSCREEN GRID NAVIGATION */}
+<div
+  className={`fixed inset-0 z-[60] lg:hidden flex items-center justify-center bg-white
+  transition-opacity duration-500 ${
+    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+  }`}
+>
+  <div className="grid gap-10 px-10 w-full max-w-lg">
+    {navLinks.map((link, index) => {
+      const isEven = index % 2 === 0;
+
+      return (
+        <a
+          key={link.href}
+          href={link.href}
+          onClick={() => {
+            setActiveSection(link.href);
+            setIsOpen(false);
+          }}
+              
+          className={`${activeSection === link.href ? activeStyle : defaultStyle}
+            text-3xl font-black tracking-tight text-slate-900 text-center
+            transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)]
+            ${isOpen
+              ? "translate-x-0 opacity-100"
+              : isEven
+                ? "-translate-x-24 opacity-0"
+                : "translate-x-24 opacity-0"
+            }
+          `}
+          style={{
+            transitionDelay: isOpen
+              ? `${index * 80}ms`
+              : `${(navLinks.length - index) * 60}ms`
+          }}
+        >
+          {link.name}
+        </a>
+      );
+    })}
+  </div>
+</div>
+
+    </>
   );
 }

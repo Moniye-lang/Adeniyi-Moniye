@@ -67,10 +67,10 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-r from-white to-[#F5F5DC] scroll-smooth selection:bg-teal-100">
+    <main className="min-h-screen bg-gradient-to-r  from-white to-[#F5F5DC] scroll-smooth selection:bg-teal-100">
       
       {/* HERO SECTION */}
-      <section id="home" className="min-h-screen grid grid-cols-1 md:grid-cols-2 items-center max-w-7xl mx-auto px-6 gap-12">
+      <section id="home" className="min-h-screen pt-[100px] grid grid-cols-1 md:grid-cols-2 items-center max-w-7xl mx-auto px-6 gap-12">
         <div className="animate-in fade-in slide-in-from-left duration-1000">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-bold uppercase mb-6">
             <span className="h-2 w-2 rounded-full bg-teal-500 animate-pulse" />
@@ -83,12 +83,15 @@ export default function Home() {
             I build high-performance web systems that bridge the gap between complex engineering and intuitive user experiences.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
+            <a href="#projects">
             <button className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 shadow-xl transition-all active:scale-95">
               Analyze My Work
-            </button>
-            <button className="px-8 py-4 rounded-2xl border-2 border-slate-200 text-slate-900 font-bold hover:border-teal-500 transition-all">
+               </button>
+            </a>
+            <a href="#contact"> <button className="px-8 py-4 rounded-2xl border-2 border-slate-200 text-slate-900 font-bold hover:border-teal-500 transition-all">
               Get in Touch
-            </button>
+            </button></a>
+           
           </div>
         </div>
 
