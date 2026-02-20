@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 
 export default function MyProjects(){
     const projects = [
@@ -8,7 +9,7 @@ export default function MyProjects(){
       video: "/eb36127e-b3f2-4982-bc69-706e3a87b0f0.mp4",
       description: "High-concurrency dashboard for real-time fleet monitoring. Built to handle massive data throughput via Web Workers without main-thread lag.",
       stats: [{ label: "Main Thread", val: "0.0ms" }, { label: "WebSocket", val: "Real-time" }],
-      link: "https://flovetcare.com/"
+      link: 'https://www.xpresscookinggas.com/'
     },
     {
       title: "Flovet Care", // Integrated from your sketch
@@ -16,7 +17,7 @@ export default function MyProjects(){
       video: "/50883d05-070e-499d-b8bf-dbb408e9dd24.mp4",
       description: "A conversion-optimized commerce engine featuring high-fidelity asset rendering and sub-second page transitions.",
       stats: [{ label: "Lighthouse", val: "100" }, { label: "FCP", val: "0.8s" }],
-      link: "https:https://flovetcare.com/"
+      link: 'https://flovetcare.com/'
     },
     {
       title: "Bistro Bliss",
@@ -24,15 +25,15 @@ export default function MyProjects(){
       video: "/450c95dd-1247-4e8d-9210-26d656a9b1c9.mp4",
       description: "Enterprise resource management tool utilizing advanced state synchronization across distributed clients.",
       stats: [{ label: "Uptime", val: "99.9%" }, { label: "Sync", val: "Optimistic" }],
-      link: "https:https://flovetcare.com/"
+      link: 'https://bistro-bliss-two.vercel.app/'
     },  
     {
-      title: "Bistro Bliss",
+      title: "Zarrin Blog",
       subtitle: "SaaS",
-      video: "/450c95dd-1247-4e8d-9210-26d656a9b1c9.mp4",
+      video: "/4b313830-ab16-49a3-986b-d450bfdf32a5.mp4",
       description: "Enterprise resource management tool utilizing advanced state synchronization across distributed clients.",
       stats: [{ label: "Uptime", val: "99.9%" }, { label: "Sync", val: "Optimistic" }],
-      link: "https:https://flovetcare.com/"
+      link: 'https://blog-silk-zeta-52.vercel.app/'
     }
   ];
     return(
@@ -60,9 +61,9 @@ export default function MyProjects(){
                   </div>
                 ))}
               </div>
-              <button className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-teal-600 transition-all shadow-xl hover:shadow-teal-100 active:scale-95">
+              <Link href={project.link} className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-teal-600 transition-all shadow-xl hover:shadow-teal-100 active:scale-95">
                 Live Link
-              </button>
+              </Link>
             </div>
 
             <div className={`lg:col-span-7 relative ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
